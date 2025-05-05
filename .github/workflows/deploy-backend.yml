@@ -7,22 +7,25 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, Windows, X64]
 
     steps:
     - name: Checkout backend code
       uses: actions/checkout@v3
 
-    - name: Set up SSH agent
-      uses: webfactory/ssh-agent@v0.7.0
+    - name: Install Node.js
+      uses: actions/setup-node@v3
       with:
-        ssh-private-key: ${{ secrets.PRIVATEKEY_BACKEND }}
+        node-version: '22'
 
-    - name: Deploy backend on EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no Administrator@44.203.63.89 "
-          cd c:/voedu/Voedu-backend  &&
-          git pull origin main &&
-          npm install &&
-          node server.js
-        "
+    - name: Install dependencies
+      run: npm install
+      working-directory: C:\voedu\Voedu-backend
+
+    - name: Run migrations (optional, if needed)
+      run: npm run migrate
+      working-directory: C:\voedu\Voedu-backend
+
+    - name: Start backend (optional, for development)
+      run: node server.js
+      working-directory: C:\voedu\Voedu-backend
