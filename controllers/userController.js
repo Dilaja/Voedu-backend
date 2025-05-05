@@ -107,7 +107,7 @@ exports.activateUser = async (req, res) => {
     return res.status(400).json({ message: "Activation failed", error: error.message });
   }
 };
-
+// change password user login
 exports.changePassword = async (req, res) => {
   if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
 
