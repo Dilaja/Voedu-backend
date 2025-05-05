@@ -1,0 +1,28 @@
+name: Deploy Backend to Windows EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout backend code
+      uses: actions/checkout@v3
+
+    - name: Set up SSH agent
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.PRIVATEKEY_BACKEND }}
+
+    - name: Deploy backend on EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no Administrator@44.203.63.89 "
+          cd c:/voedu/Voedu-backend  &&
+          git pull origin main &&
+          npm install &&
+          node server.js
+        "
